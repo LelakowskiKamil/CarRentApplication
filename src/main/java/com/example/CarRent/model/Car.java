@@ -19,7 +19,7 @@ public class Car {
     @Column(name = "model", nullable = false)
     private String model;
     @Column(name = "engine", nullable = false)
-    private double engine;
+    private String engine;
     @Column(name = "generation", nullable = false)
     private String generation;
     @Column(name = "yearOfProduction", nullable = false)
@@ -29,11 +29,11 @@ public class Car {
     @Column(name = "displacementVolume", nullable = false)
     private int displacementVolume;
     @Column(name = "enginePower", nullable = false)
-    private String enginePower;
+    private double enginePower;
     @Column(name = "fuel", nullable = false)
     private String fuel;
     @Column(name = "seats", nullable = false)
-    private String seats;
+    private int seats;
     @Column(name = "color", nullable = false)
     private String color;
 
@@ -43,14 +43,14 @@ public class Car {
     public Car(String type,
                String brand,
                String model,
-               double engine,
+               String engine,
                String generation,
                int yearOfProduction,
                int odometer,
                int displacementVolume,
-               String enginePower,
+               double enginePower,
                String fuel,
-               String seats,
+               int seats,
                String color) {
         this.type = type;
         this.brand = brand;
@@ -99,11 +99,11 @@ public class Car {
         this.model = model;
     }
 
-    public double getEngine() {
+    public String getEngine() {
         return engine;
     }
 
-    public void setEngine(double engine) {
+    public void setEngine(String engine) {
         this.engine = engine;
     }
 
@@ -139,11 +139,11 @@ public class Car {
         this.displacementVolume = displacementVolume;
     }
 
-    public String getEnginePower() {
+    public double getEnginePower() {
         return enginePower;
     }
 
-    public void setEnginePower(String enginePower) {
+    public void setEnginePower(double enginePower) {
         this.enginePower = enginePower;
     }
 
@@ -155,11 +155,11 @@ public class Car {
         this.fuel = fuel;
     }
 
-    public String getSeats() {
+    public int getSeats() {
         return seats;
     }
 
-    public void setSeats(String seats) {
+    public void setSeats(int seats) {
         this.seats = seats;
     }
 

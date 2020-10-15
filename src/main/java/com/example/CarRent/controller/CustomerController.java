@@ -54,13 +54,13 @@ public class CustomerController {
         return assembler.toModel(customer);
     }
 
-    @GetMapping("/customers/{firstname}/{lastname}")
-    public EntityModel<Customer> byFirstnameAndLastname(@PathVariable String firstname, @PathVariable String lastname ) {
-        Customer customer = repository.findByFirstnameAndLastname(firstname,lastname)
-                .orElseThrow(() -> new CustomerNotFoundException(firstname,lastname));
-
-        return assembler.toModel(customer);
-    }
+//    @GetMapping("/customers/{firstname}/{lastname}")
+//    public EntityModel<Customer> byFirstnameAndLastname(@PathVariable String firstname, @PathVariable String lastname ) {
+//        Customer customer = repository.findByFirstnameAndLastname(firstname,lastname)
+//                .orElseThrow(() -> new CustomerNotFoundException(firstname,lastname));
+//
+//        return assembler.toModel(customer);
+//    }
 
     @PutMapping("/customers/{id}")
     public ResponseEntity<?> replaceCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
