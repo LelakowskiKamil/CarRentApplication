@@ -1,6 +1,7 @@
 package com.example.CarRent.controller;
 
 
+import com.example.CarRent.CustomerService;
 import com.example.CarRent.exception.CustomerNotFoundException;
 import com.example.CarRent.model.Customer;
 import com.example.CarRent.model.assembler.CustomerAssembler;
@@ -9,6 +10,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,12 @@ import java.util.stream.Collectors;
 public class CustomerController {
     private final CustomerRepository repository;
     private final CustomerAssembler assembler;
+    private final CustomerService service;
 
-    public CustomerController(CustomerRepository repository, CustomerAssembler assembler) {
+    public CustomerController(CustomerRepository repository, CustomerAssembler assembler, CustomerService service) {
         this.repository = repository;
         this.assembler = assembler;
+        this.service = service;
     }
 
     //Agregate root
@@ -39,10 +43,17 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public ResponseEntity<?> addCustomer(@RequestBody Customer newCustomer) {
-        EntityModel<Customer> entityModel = assembler.toModel(repository.save(newCustomer));
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        if (service.validateUsername(newCustomer.getUsername()) && service.validatePassword(newCustomer.getPassword())) {
+
+            EntityModel<Customer> entityModel = assembler.toModel(repository.save(newCustomer));
+            return ResponseEntity
+                    .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                    .body(entityModel);
+        }else {
+            return ResponseEntity
+                    .badRequest()
+                    .body(newCustomer);
+        }
     }
 
     //Single item

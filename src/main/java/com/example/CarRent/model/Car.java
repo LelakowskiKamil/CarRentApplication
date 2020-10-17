@@ -12,8 +12,8 @@ public class Car {
     private @Id
     @GeneratedValue
     Long id;
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Column(name = "typeCar", nullable = false)
+    private String typeCar;
     @Column(name = "brand", nullable = false)
     private String brand;
     @Column(name = "model", nullable = false)
@@ -40,7 +40,7 @@ public class Car {
     public Car() {
     }
 
-    public Car(String type,
+    public Car(String typeCar,
                String brand,
                String model,
                String engine,
@@ -52,7 +52,7 @@ public class Car {
                String fuel,
                int seats,
                String color) {
-        this.type = type;
+        this.typeCar = typeCar;
         this.brand = brand;
         this.model = model;
         this.engine = engine;
@@ -75,12 +75,12 @@ public class Car {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeCar() {
+        return typeCar;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeCar(String typeCar) {
+        this.typeCar = typeCar;
     }
 
     public String getBrand() {
@@ -175,7 +175,7 @@ public class Car {
     public String toString() {
         return "Car{" +
                 "id=" + id +
-                ", type='" + type + '\'' +
+                ", typeCar='" + typeCar + '\'' +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", engine=" + engine +
@@ -196,7 +196,7 @@ public class Car {
         if (!(o instanceof Car)) return false;
         Car car = (Car) o;
         return Objects.equals(this.id, car.id) &&
-                Objects.equals(this.type, car.type) &&
+                Objects.equals(this.typeCar, car.typeCar) &&
                 Objects.equals(this.brand, car.brand) &&
                 Objects.equals(this.model, car.model) &&
                 Objects.equals(this.engine, car.engine) &&
@@ -214,7 +214,7 @@ public class Car {
     public int hashCode() {
         return Objects.hash(
                 id,
-                type,
+                typeCar,
                 brand,
                 model,
                 engine,

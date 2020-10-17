@@ -1,6 +1,7 @@
 package com.example.CarRent.controller;
 
 
+import com.example.CarRent.CarService;
 import com.example.CarRent.exception.CarNotFoundException;
 import com.example.CarRent.model.Car;
 import com.example.CarRent.model.assembler.CarAssembler;
@@ -12,6 +13,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +22,12 @@ import java.util.stream.Collectors;
 public class CarController {
     private final CarRepository repository;
     private final CarAssembler assembler;
+    private final CarService service;
 
-    public CarController(CarRepository repository, CarAssembler assembler) {
+    public CarController(CarRepository repository, CarAssembler assembler, CarService service) {
         this.repository = repository;
         this.assembler = assembler;
+        this.service = service;
     }
 
     //Agregate root
@@ -54,6 +58,40 @@ public class CarController {
         return assembler.toModel(car);
     }
 
+    @GetMapping("/cars/typecar")
+    public CollectionModel<EntityModel<Car>> getByTypeCar(@RequestParam String typecar) {
+        List<EntityModel<Car>> cars = repository.findByTypeCar(typecar)
+                .stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(cars,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CarController.class).getByTypeCar(typecar)).withSelfRel());
+    }
+
+    @GetMapping("/cars/brand/{brand}")
+    public CollectionModel<EntityModel<Car>> getByBrand(@PathVariable String brand) {
+        List<EntityModel<Car>> cars = repository.findByBrand(brand)
+                .stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(cars,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CarController.class).getByBrand(brand)).withSelfRel());
+    }
+
+    @GetMapping("/cars/enginepower")
+    public CollectionModel<EntityModel<Car>> getByEnginePower(@RequestParam double from, @RequestParam double to) {
+        List<EntityModel<Car>> cars = service.findByEnginePower(from,to)
+                .stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(cars,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CarController.class).getByEnginePower(from,to)).withSelfRel());
+    }
+
+
+
+
     @PutMapping("/cars/{id}")
     public ResponseEntity<?> replaceCar(@RequestBody Car newCar, @PathVariable Long id) {
         if (!repository.existsById(id)) {
@@ -61,7 +99,7 @@ public class CarController {
         }
         Car updatedCar = repository.findById(id)
                 .map(car -> {
-                    car.setType(newCar.getType());
+                    car.setTypeCar(newCar.getTypeCar());
                     car.setBrand(newCar.getBrand());
                     car.setModel(newCar.getModel());
                     car.setEngine(newCar.getEngine());

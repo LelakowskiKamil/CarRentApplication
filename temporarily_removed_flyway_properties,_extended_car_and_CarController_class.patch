@@ -1,0 +1,372 @@
+Index: CarRent/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/pom.xml	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/pom.xml	(date 1602943047977)
+@@ -35,6 +35,11 @@
+ 			<groupId>com.h2database</groupId>
+ 			<artifactId>h2</artifactId>
+ 		</dependency>
++		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
++		<dependency>
++			<groupId>org.flywaydb</groupId>
++			<artifactId>flyway-core</artifactId>
++		</dependency>
+ 
+ 		<dependency>
+ 			<groupId>org.springframework.boot</groupId>
+Index: CarRent/src/main/java/com/example/CarRent/LoadDatabase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/java/com/example/CarRent/LoadDatabase.java	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/java/com/example/CarRent/LoadDatabase.java	(date 1602942961524)
+@@ -1,58 +1,58 @@
+-package com.example.CarRent;
+-
+-import com.example.CarRent.model.Car;
+-import com.example.CarRent.model.Customer;
+-import com.example.CarRent.repository.CarRepository;
+-import com.example.CarRent.repository.CustomerRepository;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-import org.springframework.boot.CommandLineRunner;
+-import org.springframework.context.annotation.Bean;
+-import org.springframework.context.annotation.Configuration;
+-
+-@Configuration
+-public class LoadDatabase {
+-    private static final Logger log = LoggerFactory.getLogger(CarRentApplication.class);
+-
+-    @Bean
+-    CommandLineRunner initDatabase(CustomerRepository customerRepository, CarRepository carRepository) {
+-        return args -> {
+-            Customer c1 = new Customer("kamil","kamil".toCharArray(),"Kamil","Lelakowski","Mielec");
+-            Customer c2 = new Customer("tomek","tomek".toCharArray(),"Tomek","Tomecki","Krakow");
+-            Customer c3 = new Customer("andrzej","andrzej".toCharArray(),"Andrzej","Zasadzinski","Warszawa");
+-            customerRepository.save(c1);
+-            customerRepository.save(c2);
+-            customerRepository.save(c3);
+-            Car car1 = new Car("Osobowe",
+-                    "Opel",
+-                    "Astra",
+-                    "1.4 TwinSpark",
+-                    "II",
+-                    2009,
+-                    140000,
+-                    1400,
+-                    90,"benzyna",
+-                    5,
+-                    "czerwony");
+-            Car car2 = new Car("Osobowe",
+-                    "Audi",
+-                    "A4",
+-                    "1.8 GTI",
+-                    "II",
+-                    2005,
+-                    170000,
+-                    1800,
+-                    125,"benzyna",
+-                    5,
+-                    "biały");
+-            carRepository.save(car1);
+-            carRepository.save(car2);
+-            customerRepository.findAll().forEach(customer -> log.info("New Customer: " + customer));
+-            carRepository.findAll().forEach(car -> log.info("New Car: " + car));
+-
+-
+-        };
+-    }
+-
+-}
+-
++//package com.example.CarRent;
++//
++//import com.example.CarRent.model.Car;
++//import com.example.CarRent.model.Customer;
++//import com.example.CarRent.repository.CarRepository;
++//import com.example.CarRent.repository.CustomerRepository;
++//import org.slf4j.Logger;
++//import org.slf4j.LoggerFactory;
++//import org.springframework.boot.CommandLineRunner;
++//import org.springframework.context.annotation.Bean;
++//import org.springframework.context.annotation.Configuration;
++//
++//@Configuration
++//public class LoadDatabase {
++//    private static final Logger log = LoggerFactory.getLogger(CarRentApplication.class);
++//
++//    @Bean
++//    CommandLineRunner initDatabase(CustomerRepository customerRepository, CarRepository carRepository) {
++//        return args -> {
++//            Customer c1 = new Customer("kamil","kamil".toCharArray(),"Kamil","Lelakowski","Mielec");
++//            Customer c2 = new Customer("tomek","tomek".toCharArray(),"Tomek","Tomecki","Krakow");
++//            Customer c3 = new Customer("andrzej","andrzej".toCharArray(),"Andrzej","Zasadzinski","Warszawa");
++//            customerRepository.save(c1);
++//            customerRepository.save(c2);
++//            customerRepository.save(c3);
++//            Car car1 = new Car("Osobowe",
++//                    "Opel",
++//                    "Astra",
++//                    "1.4 TwinSpark",
++//                    "II",
++//                    2009,
++//                    140000,
++//                    1400,
++//                    90,"benzyna",
++//                    5,
++//                    "czerwony");
++//            Car car2 = new Car("Osobowe",
++//                    "Audi",
++//                    "A4",
++//                    "1.8 GTI",
++//                    "II",
++//                    2005,
++//                    170000,
++//                    1800,
++//                    125,"benzyna",
++//                    5,
++//                    "biały");
++//            carRepository.save(car1);
++//            carRepository.save(car2);
++//            customerRepository.findAll().forEach(customer -> log.info("New Customer: " + customer));
++//            carRepository.findAll().forEach(car -> log.info("New Car: " + car));
++//
++//
++//        };
++//    }
++//
++//}
++//
+Index: CarRent/src/main/resources/db/migration/V1__init_car_table.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/resources/db/migration/V1__init_car_table.sql	(date 1602943089628)
++++ CarRent/src/main/resources/db/migration/V1__init_car_table.sql	(date 1602943089628)
+@@ -0,0 +1,17 @@
++drop table if exists CAR;
++create table CAR
++(
++    ID                  int             primary key auto_increment,
++    BRAND               varchar(255)    not null,
++    COLOR               varchar(255)    not null,
++    DISPLACEMENT_VOLUME int             not null,
++    ENGINE              varchar(255)    not null,
++    ENGINE_POWER        double          not null,
++    FUEL                varchar(255)    not null,
++    GENERATION          varchar(255)    not null,
++    MODEL               varchar(255)    not null,
++    ODOMETER            int             not null,
++    SEATS               int             not null,
++    TYPE_Car            varchar(255)    not null,
++    YEAR_OF_PRODUCTION  int             not null
++);
+\ No newline at end of file
+Index: CarRent/src/main/java/com/example/CarRent/repository/CarRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/java/com/example/CarRent/repository/CarRepository.java	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/java/com/example/CarRent/repository/CarRepository.java	(date 1602942892513)
+@@ -7,6 +7,7 @@
+ 
+ import java.util.List;
+ import java.util.Optional;
++
+ public interface CarRepository extends JpaRepository<Car, Long> {
+ 
+ }
+Index: CarRent/src/main/java/com/example/CarRent/controller/CarController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/java/com/example/CarRent/controller/CarController.java	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/java/com/example/CarRent/controller/CarController.java	(date 1602942768487)
+@@ -61,7 +61,7 @@
+         }
+         Car updatedCar = repository.findById(id)
+                 .map(car -> {
+-                    car.setType(newCar.getType());
++                    car.setTypeCar(newCar.getTypeCar());
+                     car.setBrand(newCar.getBrand());
+                     car.setModel(newCar.getModel());
+                     car.setEngine(newCar.getEngine());
+Index: CarRent/src/main/java/com/example/CarRent/repository/CustomerRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/java/com/example/CarRent/repository/CustomerRepository.java	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/java/com/example/CarRent/repository/CustomerRepository.java	(date 1602942892522)
+@@ -8,7 +8,5 @@
+ import java.util.Optional;
+ 
+ public interface CustomerRepository extends JpaRepository<Customer, Long> {
+-//    Optional<Customer> findByFirstnameAndLastname(String firstname, String lastname);
+ //
+-//    List<Customer> findAllByCity(String city);
+ }
+Index: CarRent/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1250
+===================================================================
+--- CarRent/src/main/resources/application.properties	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/resources/application.properties	(date 1602943042534)
+@@ -4,4 +4,10 @@
+ spring.datasource.url=jdbc:h2:file:C:/Users/Dell/Documents/GitHub/CarRent/CarRentDB;DB_CLOSE_ON_EXIT=FALSE;
+ spring.jpa.hibernate.ddl-auto=validate
+ spring.datasource.initialize=true
+-security.basic.enabled=false
+\ No newline at end of file
++security.basic.enabled=false
++
++spring.flyway.baselineOnMigrate=true
++spring.flyway.check-location=true
++spring.flyway.locations=classpath:db/migration
++spring.flyway.schemas=public
++spring.flyway.enabled=true
+\ No newline at end of file
+Index: CarRent/src/main/java/com/example/CarRent/model/Car.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CarRent/src/main/java/com/example/CarRent/model/Car.java	(revision f1db86d26e4ccedf57f991c41b3c43c5e7b003bd)
++++ CarRent/src/main/java/com/example/CarRent/model/Car.java	(date 1602942768496)
+@@ -12,8 +12,8 @@
+     private @Id
+     @GeneratedValue
+     Long id;
+-    @Column(name = "type", nullable = false)
+-    private String type;
++    @Column(name = "typeCar", nullable = false)
++    private String typeCar;
+     @Column(name = "brand", nullable = false)
+     private String brand;
+     @Column(name = "model", nullable = false)
+@@ -40,7 +40,7 @@
+     public Car() {
+     }
+ 
+-    public Car(String type,
++    public Car(String typeCar,
+                String brand,
+                String model,
+                String engine,
+@@ -52,7 +52,7 @@
+                String fuel,
+                int seats,
+                String color) {
+-        this.type = type;
++        this.typeCar = typeCar;
+         this.brand = brand;
+         this.model = model;
+         this.engine = engine;
+@@ -75,12 +75,12 @@
+         this.id = id;
+     }
+ 
+-    public String getType() {
+-        return type;
++    public String getTypeCar() {
++        return typeCar;
+     }
+ 
+-    public void setType(String type) {
+-        this.type = type;
++    public void setTypeCar(String typeCar) {
++        this.typeCar = typeCar;
+     }
+ 
+     public String getBrand() {
+@@ -175,7 +175,7 @@
+     public String toString() {
+         return "Car{" +
+                 "id=" + id +
+-                ", type='" + type + '\'' +
++                ", typeCar='" + typeCar + '\'' +
+                 ", brand='" + brand + '\'' +
+                 ", model='" + model + '\'' +
+                 ", engine=" + engine +
+@@ -196,7 +196,7 @@
+         if (!(o instanceof Car)) return false;
+         Car car = (Car) o;
+         return Objects.equals(this.id, car.id) &&
+-                Objects.equals(this.type, car.type) &&
++                Objects.equals(this.typeCar, car.typeCar) &&
+                 Objects.equals(this.brand, car.brand) &&
+                 Objects.equals(this.model, car.model) &&
+                 Objects.equals(this.engine, car.engine) &&
+@@ -214,7 +214,7 @@
+     public int hashCode() {
+         return Objects.hash(
+                 id,
+-                type,
++                typeCar,
+                 brand,
+                 model,
+                 engine,
+diff --git CarRent/CarRentDB.mv.db CarRent/CarRentDB.mv.db
+new file mode 100644
+index 0000000000000000000000000000000000000000..8608fa91d0149959c6b0c01f4eb0ecd8c77487d6
+GIT binary patch
+literal 28672
+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
+DyVspn
+
