@@ -3,6 +3,8 @@ package com.example.CarRent.controller;
 
 import com.example.CarRent.CustomerService;
 import com.example.CarRent.exception.CustomerNotFoundException;
+import com.example.CarRent.exception.IncorrectPasswordException;
+import com.example.CarRent.exception.IncorrectUsernameException;
 import com.example.CarRent.model.Customer;
 import com.example.CarRent.model.assembler.CustomerAssembler;
 import com.example.CarRent.repository.CustomerRepository;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@IllegalExceptionProcessing
 @RestController
 public class CustomerController {
     private final CustomerRepository repository;
@@ -50,9 +52,7 @@ public class CustomerController {
                     .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                     .body(entityModel);
         }else {
-            return ResponseEntity
-                    .badRequest()
-                    .body(newCustomer);
+            throw new IllegalArgumentException("Password or username are incorrect");
         }
     }
 

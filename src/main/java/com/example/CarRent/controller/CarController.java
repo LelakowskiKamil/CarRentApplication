@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @RestController
 public class CarController {
     private final CarRepository repository;
@@ -53,10 +52,12 @@ public class CarController {
     @GetMapping("/cars/{id}")
     public EntityModel<Car> one(@PathVariable Long id) {
         Car car = repository.findById(id)
-                .orElseThrow(() -> new CarNotFoundException(id));
+              .orElseThrow(() -> new CarNotFoundException(id));
 
         return assembler.toModel(car);
     }
+
+
 
     @GetMapping("/cars/typecar")
     public CollectionModel<EntityModel<Car>> getByTypeCar(@RequestParam String typecar) {

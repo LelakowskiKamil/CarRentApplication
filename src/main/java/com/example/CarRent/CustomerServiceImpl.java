@@ -1,7 +1,5 @@
 package com.example.CarRent;
 
-import com.example.CarRent.exception.IncorrectPasswordException;
-import com.example.CarRent.exception.IncorrectUsernameException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
