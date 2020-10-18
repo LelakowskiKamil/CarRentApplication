@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rent App</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+
+</head>
+<body>
+<main>
+    <!--/*@thymesVar id="customer" type="com.example.CarRent.model.Customer"*/-->
+    <form action="#" method="post" th:action="@{/customers/view}" th:object="${customer}">
+        <fieldset>
+            <legend>Nowy projekt</legend>
+            <label>username
+                <input type="text" th:field="*{username}" />
+            </label>
+            <label>password
+                <input type="text" th:field="*{password}" />
+            </label>
+            <label>firstname
+                <input type="text" th:field="*{firstname}" />
+            </label>
+            <label>lastname
+                <input type="text" th:field="*{lastname}" />
+            </label>
+            <label>city
+                <input type="text" th:field="*{city}" />
+            </label>
+        </fieldset>
+<p>
+<button type="submit" >Dodaj</button>
+<button type="reset">Reset</button>
+</p>
+
+    </form>
+
+
+</main>
+</body>
+</html>

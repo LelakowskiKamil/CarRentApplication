@@ -14,13 +14,15 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @IllegalExceptionProcessing
-@RestController
+@Controller
 public class CustomerController {
     private final CustomerRepository repository;
     private final CustomerAssembler assembler;
@@ -31,6 +33,31 @@ public class CustomerController {
         this.assembler = assembler;
         this.service = service;
     }
+
+    @GetMapping("/customers/view")
+String show(Model model){
+        model.addAttribute("customer", new Customer());
+        return "index";
+    }
+
+//    @PostMapping("/customers/view")
+//String addCustomerClick(@ModelAttribute("customer") Customer customer, Model model){
+//        repository.save(customer);
+//        model.addAttribute("customer", new Customer());
+//        return "index";
+//    }
+    @PostMapping("/customers/view")
+String addCustomerClick2(@ModelAttribute("customer") Customer customer, Model model){
+    if (service.validateUsername(customer.getUsername()) && service.validatePassword(customer.getPassword())) {
+//TODO add '******' style to password view
+        EntityModel<Customer> entityModel = assembler.toModel(repository.save(customer));
+        model.addAttribute("customer", new Customer());
+    }else {
+        throw new IllegalArgumentException("Password or username are incorrect");
+    }
+        return "index";
+    }
+
 
     //Agregate root
     @GetMapping("/customers")
